@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>작업 대시보드 — 픽노바</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #f7f8fa;
+      color: #1a1a2e;
+      min-height: 100vh;
+      padding: 32px 24px;
+    }
+
+    /* 상단 헤더 */
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 36px;
+    }
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .logo {
+      width: 32px; height: 32px;
+      background: linear-gradient(135deg, #5e6ad2, #a78bfa);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      color: white; font-weight: 700; font-size: 14px;
+    }
+    .project-name {
+      font-size: 15px;
+      font-weight: 600;
+      color: #1a1a2e;
+    }
+    .topbar-date {
+      font-size: 13px;
+      color: #8b8fa8;
+      background: #eeeef5;
+      padding: 4px 12px;
+      border-radius: 20px;
+    }
+
+    /* 페이지 타이틀 */
+    .page-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: #1a1a2e;
+      margin-bottom: 4px;
+    }
+    .page-sub {
+      font-size: 13px;
+      color: #8b8fa8;
+      margin-bottom: 28px;
+    }
+
+    /* 요약 카드 3개 */
+    .summary-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+    .summary-card {
+      background: #fff;
+      border: 1px solid #e5e7f0;
+      border-radius: 12px;
+      padding: 20px 22px;
+    }
+    .summary-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: #8b8fa8;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 10px;
+    }
+    .summary-value {
+      font-size: 30px;
+      font-weight: 700;
+      color: #1a1a2e;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+    .summary-value span {
+      font-size: 14px;
+      font-weight: 500;
+      color: #8b8fa8;
+    }
+    .summary-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 20px;
+    }
+    .badge-green { background: #e6f9f0; color: #12b886; }
+    .badge-blue  { background: #e8eaff; color: #5e6ad2; }
+    .badge-gray  { background: #eeeef5; color: #8b8fa8; }
+
+    /* 메인 2단 레이아웃 */
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 16px;
+    }
+
+    /* 작업 목록 카드 */
+    .card {
+      background: #fff;
+      border: 1px solid #e5e7f0;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .card-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid #f0f1f8;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .card-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #1a1a2e;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .card-title-icon {
+      width: 20px; height: 20px;
+      border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px;
+    }
+    .icon-purple { background: #ede9fe; }
+    .icon-blue   { background: #e8eaff; }
+    .icon-green  { background: #e6f9f0; }
+
+    /* 작업 아이템 */
+    .task-item {
+      padding: 12px 20px;
+      border-bottom: 1px solid #f7f8fa;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      transition: background 0.15s;
+    }
+    .task-item:last-child { border-bottom: none; }
+    .task-item:hover { background: #fafafa; }
+
+    .task-status {
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      margin-top: 1px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px;
+    }
+    .status-done { background: #12b886; color: white; }
+    .status-file { background: #5e6ad2; color: white; }
+
+    .task-content { flex: 1; }
+    .task-title {
+      font-size: 13px;
+      font-weight: 500;
+      color: #1a1a2e;
+      margin-bottom: 3px;
+    }
+    .task-desc {
+      font-size: 12px;
+      color: #8b8fa8;
+      line-height: 1.5;
+    }
+    .task-meta {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 6px;
+    }
+    .tag {
+      font-size: 11px;
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-weight: 500;
+    }
+    .tag-sd   { background: #fef3c7; color: #b45309; }
+    .tag-tt   { background: #dbeafe; color: #1d4ed8; }
+    .tag-jb   { background: #f0fdf4; color: #15803d; }
+    .tag-skill{ background: #ede9fe; color: #6d28d9; }
+    .tag-node { background: #fff7ed; color: #c2410c; }
+
+    /* 매핑 테이블 */
+    .mapping-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+    .mapping-table th {
+      text-align: left;
+      padding: 10px 20px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #8b8fa8;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      background: #f7f8fa;
+      border-bottom: 1px solid #e5e7f0;
+    }
+    .mapping-table td {
+      padding: 11px 20px;
+      border-bottom: 1px solid #f7f8fa;
+      color: #1a1a2e;
+      font-size: 12px;
+    }
+    .mapping-table tr:last-child td { border-bottom: none; }
+    .arrow { color: #5e6ad2; font-weight: 700; }
+
+    /* 사이드 패널 */
+    .side-col { display: flex; flex-direction: column; gap: 16px; }
+
+    /* 파일 목록 */
+    .file-item {
+      padding: 11px 20px;
+      border-bottom: 1px solid #f7f8fa;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .file-item:last-child { border-bottom: none; }
+    .file-icon {
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+    .file-name {
+      font-size: 12px;
+      font-weight: 500;
+      color: #1a1a2e;
+    }
+    .file-path {
+      font-size: 11px;
+      color: #8b8fa8;
+      margin-top: 1px;
+    }
+
+    /* 스킬 카드 */
+    .skill-box {
+      padding: 16px 20px;
+    }
+    .skill-command {
+      background: #1a1a2e;
+      color: #a78bfa;
+      font-family: 'SF Mono', 'Consolas', monospace;
+      font-size: 14px;
+      font-weight: 600;
+      padding: 10px 16px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+    .skill-desc {
+      font-size: 12px;
+      color: #8b8fa8;
+      line-height: 1.6;
+    }
+    .skill-rule {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: #4b5563;
+      margin-top: 6px;
+    }
+
+    /* 푸터 */
+    .footer {
+      margin-top: 28px;
+      text-align: center;
+      font-size: 11px;
+      color: #c4c6d6;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 상단 바 -->
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="logo">픽</div>
+      <span class="project-name">픽노바 · 발주 자동화</span>
+    </div>
+    <div class="topbar-date">📅 2026년 4월 9일</div>
+  </div>
+
+  <!-- 페이지 타이틀 -->
+  <div class="page-title">오늘의 작업 대시보드</div>
+  <div class="page-sub">발주서 자동 채우기 작업 완료 요약</div>
+
+  <!-- 요약 카드 -->
+  <div class="summary-row">
+    <div class="summary-card">
+      <div class="summary-label">총 주문 건수</div>
+      <div class="summary-value">21 <span>건</span></div>
+      <span class="summary-badge badge-gray">orderlist_260311.xlsx</span>
+    </div>
+    <div class="summary-card">
+      <div class="summary-label">SD 발주서</div>
+      <div class="summary-value">6 <span>건</span></div>
+      <span class="summary-badge badge-blue">이미 완료됨</span>
+    </div>
+    <div class="summary-card">
+      <div class="summary-label">TT 발주서 신규 추가</div>
+      <div class="summary-value">15 <span>건</span></div>
+      <span class="summary-badge badge-green">✓ 오늘 완료</span>
+    </div>
+  </div>
+
+  <!-- 메인 그리드 -->
+  <div class="main-grid">
+
+    <!-- 왼쪽: 작업 목록 + 매핑 테이블 -->
+    <div style="display:flex; flex-direction:column; gap:16px;">
+
+      <!-- 완료된 작업 목록 -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <div class="card-title-icon icon-green">✓</div>
+            완료된 작업
+          </div>
+          <span class="summary-badge badge-green">3개 완료</span>
+        </div>
+
+        <div class="task-item">
+          <div class="task-status status-done">✓</div>
+          <div class="task-content">
+            <div class="task-title">발주 목록 분석 및 업체별 분류</div>
+            <div class="task-desc">orderlist_260311.xlsx에서 [sd] 6건, [jb] 15건 구분 완료</div>
+            <div class="task-meta">
+              <span class="tag tag-sd">[sd] 6건</span>
+              <span class="tag tag-jb">[jb] 15건</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="task-item">
+          <div class="task-status status-done">✓</div>
+          <div class="task-content">
+            <div class="task-title">발주서 자동 채우기 실행</div>
+            <div class="task-desc">
+              sd발주서.xlsx → 기존 6건 유지 (중복 없어서 추가 없음)<br>
+              tt발주서.xlsx → [jb] 상품 15건 새로 채워 넣음
+            </div>
+            <div class="task-meta">
+              <span class="tag tag-node">Node.js</span>
+              <span class="tag tag-tt">tt발주서 15건 추가</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="task-item">
+          <div class="task-status status-done">✓</div>
+          <div class="task-content">
+            <div class="task-title">/발주서채우기 스킬 등록</div>
+            <div class="task-desc">다음부터 채팅창에 /발주서채우기 입력하면 자동 실행됨</div>
+            <div class="task-meta">
+              <span class="tag tag-skill">/발주서채우기</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- 업체별 매핑 규칙 -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <div class="card-title-icon icon-blue">↔</div>
+            업체별 매핑 규칙
+          </div>
+        </div>
+        <table class="mapping-table">
+          <thead>
+            <tr>
+              <th>상품 코드</th>
+              <th>이동 방향</th>
+              <th>발주서 파일</th>
+              <th>건수</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="tag tag-sd">[sd]</span></td>
+              <td><span class="arrow">→</span></td>
+              <td>sd발주서.xlsx</td>
+              <td>6건</td>
+            </tr>
+            <tr>
+              <td><span class="tag tag-jb">[jb]</span></td>
+              <td><span class="arrow">→</span></td>
+              <td>tt발주서.xlsx</td>
+              <td>15건</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- 보내는이 고정값 -->
+        <div style="padding:12px 20px; background:#f7f8fa; border-top:1px solid #e5e7f0;">
+          <div style="font-size:11px; font-weight:600; color:#8b8fa8; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:6px;">SD 발주서 보내는이 고정값</div>
+          <div style="font-size:12px; color:#4b5563; line-height:1.8;">
+            🏢 픽노바 &nbsp;|&nbsp; 📞 010-7662-0250 &nbsp;|&nbsp; 📍 충청남도 서천군 장항읍 장마로80 601호
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- 오른쪽 사이드 -->
+    <div class="side-col">
+
+      <!-- 생성된 파일 -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <div class="card-title-icon icon-purple">📁</div>
+            생성된 파일
+          </div>
+        </div>
+        <div class="file-item">
+          <div class="file-icon">📄</div>
+          <div>
+            <div class="file-name">fill_orders.js</div>
+            <div class="file-path">C:/AI minji/Test ai/</div>
+          </div>
+        </div>
+        <div class="file-item">
+          <div class="file-icon">⚡</div>
+          <div>
+            <div class="file-name">발주서채우기.md</div>
+            <div class="file-path">.claude/commands/</div>
+          </div>
+        </div>
+        <div class="file-item">
+          <div class="file-icon">📊</div>
+          <div>
+            <div class="file-name">tt발주서.xlsx</div>
+            <div class="file-path">실습 파일/ · 15건 추가됨</div>
+          </div>
+        </div>
+        <div class="file-item">
+          <div class="file-icon">📊</div>
+          <div>
+            <div class="file-name">sd발주서.xlsx</div>
+            <div class="file-path">실습 파일/ · 기존 유지</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 스킬 사용법 -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <div class="card-title-icon icon-purple">⚡</div>
+            스킬 사용법
+          </div>
+        </div>
+        <div class="skill-box">
+          <div class="skill-command">/발주서채우기</div>
+          <div class="skill-desc">
+            다음번에 새 주문이 들어오면<br>
+            채팅창에 위 명령어만 입력하면 끝!
+          </div>
+          <div class="skill-rule">✅ 중복 자동 방지 (이미 있는 건 건너뜀)</div>
+          <div class="skill-rule">✅ [sd] → sd발주서 자동 분류</div>
+          <div class="skill-rule">✅ [jb] → tt발주서 자동 분류</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="footer">픽노바 발주 자동화 · Claude Code로 제작</div>
+
+</body>
+</html>

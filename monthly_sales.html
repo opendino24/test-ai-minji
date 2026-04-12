@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>과일·농산물 월별 판매 전략</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Malgun Gothic', sans-serif; background: #f5f5f5; color: #333; }
+
+  header {
+    background: linear-gradient(135deg, #2e7d32, #66bb6a);
+    color: white;
+    text-align: center;
+    padding: 40px 20px;
+  }
+  header h1 { font-size: 2rem; margin-bottom: 8px; }
+  header p { font-size: 1rem; opacity: 0.9; }
+
+  .container { max-width: 1100px; margin: 30px auto; padding: 0 16px; }
+
+  .legend {
+    display: flex; flex-wrap: wrap; gap: 12px;
+    background: white; border-radius: 12px;
+    padding: 16px 20px; margin-bottom: 28px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 0.85rem; }
+  .dot { width: 12px; height: 12px; border-radius: 50%; }
+  .dot-fire { background: #e53935; }
+  .dot-high { background: #fb8c00; }
+  .dot-mid  { background: #43a047; }
+  .dot-gift { background: #8e24aa; }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
+
+  .card {
+    background: white; border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.09);
+    overflow: hidden; transition: transform 0.2s;
+  }
+  .card:hover { transform: translateY(-4px); }
+
+  .card-header {
+    padding: 14px 20px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .month-badge {
+    background: rgba(255,255,255,0.3);
+    border-radius: 50%; width: 48px; height: 48px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 900; font-size: 1.1rem; color: white;
+    flex-shrink: 0;
+  }
+  .card-header h2 { color: white; font-size: 1.1rem; }
+  .card-header .subtitle { color: rgba(255,255,255,0.85); font-size: 0.8rem; margin-top: 2px; }
+
+  .card-body { padding: 16px 20px; }
+
+  .item-row {
+    display: flex; align-items: flex-start;
+    gap: 10px; padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .item-row:last-child { border-bottom: none; }
+
+  .badge {
+    font-size: 0.7rem; font-weight: 700;
+    padding: 2px 8px; border-radius: 20px;
+    white-space: nowrap; flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .badge-fire { background: #ffebee; color: #e53935; }
+  .badge-high { background: #fff3e0; color: #fb8c00; }
+  .badge-mid  { background: #e8f5e9; color: #2e7d32; }
+  .badge-gift { background: #f3e5f5; color: #8e24aa; }
+
+  .item-name { font-weight: 700; font-size: 0.95rem; }
+  .item-desc { font-size: 0.8rem; color: #777; margin-top: 2px; }
+
+  .tip-box {
+    margin-top: 12px;
+    background: #fffde7; border-left: 4px solid #fdd835;
+    padding: 10px 14px; border-radius: 6px;
+    font-size: 0.82rem; color: #555;
+  }
+  .tip-box strong { color: #f57f17; }
+
+  /* 월별 색상 */
+  .m1  { background: linear-gradient(135deg, #1565c0, #42a5f5); }
+  .m2  { background: linear-gradient(135deg, #c62828, #ef9a9a); }
+  .m3  { background: linear-gradient(135deg, #2e7d32, #a5d6a7); }
+  .m4  { background: linear-gradient(135deg, #558b2f, #aed581); }
+  .m5  { background: linear-gradient(135deg, #f9a825, #ffe082); }
+  .m6  { background: linear-gradient(135deg, #e65100, #ffcc80); }
+  .m7  { background: linear-gradient(135deg, #00695c, #80cbc4); }
+  .m8  { background: linear-gradient(135deg, #1565c0, #90caf9); }
+  .m9  { background: linear-gradient(135deg, #6a1b9a, #ce93d8); }
+  .m10 { background: linear-gradient(135deg, #bf360c, #ffab91); }
+  .m11 { background: linear-gradient(135deg, #4e342e, #bcaaa4); }
+  .m12 { background: linear-gradient(135deg, #1a237e, #7986cb); }
+
+  footer {
+    text-align: center; padding: 30px;
+    color: #aaa; font-size: 0.82rem;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🍎 과일·농산물 월별 판매 전략</h1>
+  <p>온라인 판매 성수기 & 폭발적 판매량 품목 정리</p>
+</header>
+
+<div class="container">
+
+  <div class="legend">
+    <strong style="margin-right:4px;">판매 강도:</strong>
+    <div class="legend-item"><div class="dot dot-fire"></div> 🔥 폭발적 (연중 최고)</div>
+    <div class="legend-item"><div class="dot dot-high"></div> ⬆ 높음 (성수기)</div>
+    <div class="legend-item"><div class="dot dot-mid"></div> ✅ 안정적</div>
+    <div class="legend-item"><div class="dot dot-gift"></div> 🎁 선물세트 대목</div>
+  </div>
+
+  <div class="grid">
+
+    <!-- 1월 -->
+    <div class="card">
+      <div class="card-header m1">
+        <div class="month-badge">1월</div>
+        <div><h2>감귤류 전성기</h2><div class="subtitle">설 선물세트 준비 시작</div></div>
+      </div>
+      <div class="card-body">
+        <div class="item-row"><span class="badge badge-fire">🔥 폭발적</span><div><div class="item-name">한라봉 · 천혜향</div><div class="item-desc">겨울 프리미엄 감귤 최성수기, 선물용 수요 급증</div></div></div>
+        <div class="item-row"><span class="badge badge-fire">🔥 폭발적</span><div><div class="item-name">딸기</div><div class="item-desc">겨울딸기 시즌, SNS 인기로 수요 폭증</div></div></div>
+        <div class="item-row"><span class="badge badge-gift">🎁 선물</span><div><div class="item-name">사과 · 배 선물세트</div><div class="item-desc">설 명절 대목 (설 2~3주 전부터 주문 폭증)</div></div></div>
+        <div class="item-row"><span class="badge badge-high">⬆ 높음</span><div><div class="item-name">곶감 · 대추</div><div class="item-desc">제수용품, 설 전 수요 높음</div></div></div>
+        <div class="tip-box"><strong>💡 핵심전략:</strong> 설 명절 2주 전부터 선물세트 집중 판매. 한라봉·천혜향은 "산지 직송" 강조</div>
+      </div>
+    </div>
+
+    <!-- 2월 -->
+    <div class="card">
+      <div class="card-header m2">
+        <div class="month-badge">2월</div>
+        <div><h2>딸기 최절정</h2><div class="subtitle">발렌타인 선물 특수</div></div>
+      </div>
+      <div class="card-body">
+        <div class="item-row"><span class="badge badge-fire">🔥 폭발적</span><div><div class="item-name">딸기 (설향·킹스베리)</div><div class="item-desc">연중 가장 많이 팔리는 달, 발렌타인 선물 수요까지</div></div></div>
+        <div class="item-row"><span class="badge badge-fire">🔥 폭발적</span><div><div class="item-name">레드향 · 황금향</div><div class="item-desc">프리미엄 감귤 최성수기</div></div></div>
+        <div class="item-row"><span class="badge badge-high">⬆ 높음</span><div><div class="item-name">한라봉 · 천혜향</div><div class="item-desc">지속 인기, 설 이후에도 꾸준한 수요</div></div></div>
+        <div class="tip-box"><strong>💡 핵심전략:</strong> 딸기는 2~3kg 선물박스 구성 필수. "당일 수확·당일 발송" 문구로 신선함 강조</div>
+      </div>
+    </div>
+
+    <!-- 3월 -->
+    <div class="card">
+      <div class="card-header m3">
+        <div class="month-badge">3월</div>
+        <div><h2>봄나물 시즌 개막</h2><div class="subtitle">건강식 관심 급상승</div></div>
+      </div>
+      <div class="card-body">
+        <div class="item-row"><span class="badge badge-fire">🔥 폭발적</span><div><div class="item-name">냉이 · 달래 · 쑥</div><div class="item-desc">봄나물 첫 출하, 희소성으로 가격·수요 동시 폭등</div></div></div>
+        <div class="item-row"><span class="badge badge-high">⬆ 높음</span><div><div class="item-name">딸기</div><div class="item-desc">시즌 마무리 전 수요 여전히 높음</div></div></div>
+        <div class="item-row"><span class="badge badge-mid">✅ 안정</span><div><div class="item-name">제주 감귤 · 한라봉</div><div class="item-desc">재고 소진 전 마지막 판매 기회</div></div></div>
+        <div class="tip-box"><strong>💡 핵심전략:</strong> 봄나물은 "올해 첫 출하", "산에서 직접 채취" 스토리텔링이 구매 전환율 높임</div>
+      </div>
+    </div>
+
+    <!-- 4월 -->
+    <div class="card">
+      <div class="card-header m4">
+        <div class="month-badge">4월</div>
+        <div><h2>봄나물 최성수기</h2><div class="subtitle">두릅·취나물 인기 절정</div></div>
+      </div>
+      <div class="card-body">
+        <div class="item-row"><span class="badge badge-fire">🔥 폭발적</span><div><div class="item-name">두릅 · 취나물</div><div class="item-desc">봄나물 중 최고 인기, 짧은 시즌으로 희소성 극대화</div></div></div>
+        <div class="item-row"><span class="badge badge-fire">🔥 폭발적</span><div><div class="item-name">냉이 · 달래 · 머위</div><div class="item-desc">봄나물 전성기, 건강식 트렌드와 맞물려 폭발적 판매</div></div></div>
+        <div class="item-row"><span class="badge badge-high">⬆ 높음</span><div><div class="item-name">참외 (초기 출하)</div><div class="item-desc">성주 참외 첫 출하, 프리미엄 가격에도 수요 높음</div></div></div>
+        <div class="tip-box"><strong>💡 핵심전략:</strong> 두릅은 시즌이 2~3주로 매우 짧음. "지금 아니면 못 먹어요!" 긴박감 마케팅 효과적</div>
+      </div>
+    </div>
+
+    <!-- 5월 -->
+    <div class="card">
+      <div class="card-header m5">
+        <div class="month-badge">5월</div>
+        <div><h2>참외 본격 시즌</h2><div class="subtitle">어버이날 선물 대목</div></div>
+      </div>
+      <div class="card-body">
+        <div class="item-row"><span class="badge badge-fire">🔥 폭발적</span><div><div class="item-name">참외 (성주 참외)</div><div class="item-desc">참외 최성수기, 어버이날 선물세트로도 인기 급상승</div></div></div>
+        <div class="item-row"><span class="badge badge-gift">🎁 선물</span><div><div class="item-name">과일 선물세트</div><div class="item-desc">어버이날(5/8) 전후 2주가 연중 선물 판매 최대 피크</div></div></div>
+        <div class="item-row"><span class="badge badge-high">⬆ 높음</span><div><div class="item-name">햇감자 · 양파</div><div class="item-desc">햇채소 첫 출하, "햇" 타이틀로 프리미엄 가격 책정 가능</div></div></div>
+        <div class="item-row"><span class="badge badge-high">⬆ 높음</span><div><div class="item-name">수박 (초기)</div><div class="item-desc">더위 시작과 함께 수요 증가</div></div></div>
+        <div class="tip-box"><strong>💡 핵심전략:</strong> 어버이날 1~2주 전부터 "부모님께 드리는 제철 과일세트" 기획전 필수</div>
+      </div>
+    </div>
+
+    <!-- 6월 -->
+    <div class="card">
+      <div class="card-header m6">
+        <div class="month-badge">6월</div>
+        <div><h2>여름 과일 개막</h2><div class="subtitle">매실·자두 판매 폭발</div></div>
+      </div>
+      <div class="card-body">
+        <div class="item-row"><span class="badge badge-fire">🔥 폭발적</span><div><div class="item-name">매실</div><div class="item-desc">매실청·매실주 담그기 시즌, 대량 구매 수요 폭증</div></div></div>
+        <div class="item-row"><span class="badge badge-fire">🔥 폭발적</span><div><div class="item-name">수박</div><div class="item-desc">여름 대표 과일, 더위와 함께 수요 급등</div></div></div>
+        <div class="item-row"><span class="badge badge-high">⬆ 높음</span><div><div class="item-name">자두 · 복숭아 (초기)</div><div class="item-desc">여름 핵과류 시즌 시작</div></div></div>
+        <div class="item-row"><span class="badge badge-high">⬆ 높음</span><div><div class="item-name">블루베리</div><div class="item-desc">국산 블루베리 출하 시작, 건강 이미지로 인기</div></div></div>
+        <div class="tip-box"><strong>💡 핵심전략:</strong> 매실은 3~5kg 대용량으로 판매. "올해 첫 수확 매실" 타이밍 마케팅이 핵심</div>
+      </div>
+    </div>
+
+    <!-- 7월 -->
+    <div class="card">
+      <div class="card-header m7">
+        <div class="month-badge">7월</div>
+        <div><h2>여름 과일 최절정</h2><div class="subtitle">복숭아·포도 성수기 시작</div></div>
+      </div>
+      <div class="card-body">
+        <div class="item-row"><span class="badge badge-fire">🔥 폭발적</span><div><div class="item-name">복숭아 (황도·백도)</div><div class="item-desc">여름 과일 중 온라인 판매 1위, 선물용 수요 매우 높음</div></div></div>
+        <div class="item-row"><span class="badge badge-fire">🔥 폭발적</span><div><div class="item-name">수박</div><div class="item-desc">한여름 최대 판매, 반통·미니수박 인기</div></div></div>
+        <div class="item-row"><span class="badge badge-high">⬆ 높음</span><div><div class="item-name">블루베리 · 자두</div><div class="item-desc">국산 블루베리 최성수기</div></div></div>
+        <div class="item-row"><span class="badge badge-high">⬆ 높음</span><div><div class="item-name">옥수수 · 토마토</div><div class="item-desc">여름 채소 수요 높음</div></div></div>
+        <div class="tip-box"><strong>💡 핵심전략:</strong> 복숭아는 새벽배송·당일배송이 핵심. 멍드는 과일이라 신선 배송 보장 문구 필수</div>
+      </div>
+    </div>
+
+    <!-- 8월 -->
+    <div class="card">
+      <div class="card-header m8">
+        <div class="month-badge">8월</div>
+        <div><h2>포도 전성기</h2><div class="subtitle">추석 선물세트 예약 시작</div></div>
+      </div>
+      <div class="card-body">
+        <div class="item-row"><span class="badge badge-fire">🔥 폭발적</span><div><div class="item-name">포도 (샤인머스캣)</div><div class="item-desc">샤인머스캣 인기로 온라인 판매 폭발적 증가</div></div></div>
+        <div class="item-row"><span class="badge badge-fire">🔥 폭발적</span><div><div class="item-name">복숭아</div><div class="item-desc">8월 중순까지 최성수기 지속</div></div></div>
+        <div class="item-row"><span class="badge badge-gift">🎁 선물</span><div><div class="item-name">추석 선물세트 예약</div><div class="item-desc">추석이 9월이면 8월 말부터 예약 주문 폭증</div></div></div>
+        <div class="item-row"><span class="badge badge-high">⬆ 높음</span><div><div class="item-name">참깨 · 들깨</div><div class="item-desc">추석 준비 식재료 수요 증가</div></div></div>
+        <div class="tip-box"><strong>💡 핵심전략:</strong> 샤인머스캣은 고가 선물용으로 포지셔닝. 추석 선물세트 얼리버드 할인 8월 초 시작</div>
+      </div>
+    </div>
+
+    <!-- 9월 -->
+    <div class="card">
+      <div class="card-header m9">
+        <div class="month-badge">9월</div>
+        <div><h2>추석 대목 🎁</h2><div class="subtitle">연중 최대 판매 시즌</div></div>
+      </div>
+      <div class="card-body">
+        <div class="item-row"><span class="badge badge-fire">🔥 폭발적</span><div><div class="item-name">사과 · 배 선물세트</div><div class="item-desc">추석 선물 부동의 1위, 연중 판매 최대치 기록</div></div></div>
+        <div class="item-row"><span class="badge badge-fire">🔥 폭발적</span><div><div class="item-name">샤인머스캣 선물세트</div><div class="item-desc">최근 추석 선물 급부상, 고가임에도 수요 폭발</div></div></div>
+        <div class="item-row"><span class="badge badge-fire">🔥 폭발적</span><div><div class="item-name">햇밤 · 대추 · 곶감</div><div class="item-desc">제수용품 수요 폭증</div></div></div>
+        <div class="item-row"><span class="badge badge-high">⬆ 높음</span><div><div class="item-name">고구마 · 햅쌀</div><div class="item-desc">추석 전후 햇곡식 수요 높음</div></div></div>
+        <div class="tip-box"><strong>💡 핵심전략:</strong> 추석 3주 전이 주문 피크! 배송 마감일 공지로 긴박감 조성. 선물세트 구성이 수익의 핵심</div>
+      </div>
+    </div>
+
+    <!-- 10월 -->
+    <div class="card">
+      <div class="card-header m10">
+        <div class="month-badge">10월</div>
+        <div><h2>가을 과일 최성수기</h2><div class="subtitle">사과·배·단감 황금기</div></div>
+      </div>
+      <div class="card-body">
+        <div class="item-row"><span class="badge badge-fire">🔥 폭발적</span><div><div class="item-name">사과 (홍로·부사)</div><div class="item-desc">가을 사과 최성수기, 부사는 10~11월 최대 판매</div></div></div>
+        <div class="item-row"><span class="badge badge-fire">🔥 폭발적</span><div><div class="item-name">단감 · 대봉감</div><div class="item-desc">가을 감 시즌, 단기간 집중 판매</div></div></div>
+        <div class="item-row"><span class="badge badge-high">⬆ 높음</span><div><div class="item-name">고구마 · 밤</div><div class="item-desc">가을 간식 수요 급증</div></div></div>
+        <div class="item-row"><span class="badge badge-high">⬆ 높음</span><div><div class="item-name">배추 · 무 (김장용)</div><div class="item-desc">김장 시즌 준비 시작, 대량 구매 수요</div></div></div>
+        <div class="tip-box"><strong>💡 핵심전략:</strong> 고구마는 "꿀고구마", "밤고구마" 품종 차별화 필수. 10kg 대용량 박스 판매 효과적</div>
+      </div>
+    </div>
+
+    <!-- 11월 -->
+    <div class="card">
+      <div class="card-header m11">
+        <div class="month-badge">11월</div>
+        <div><h2>김장철 대목</h2><div class="subtitle">귤 시즌 시작</div></div>
+      </div>
+      <div class="card-body">
+        <div class="item-row"><span class="badge badge-fire">🔥 폭발적</span><div><div class="item-name">김장 배추 · 무 · 파</div><div class="item-desc">김장철 대목, 대량 구매로 객단가 높음</div></div></div>
+        <div class="item-row"><span class="badge badge-fire">🔥 폭발적</span><div><div class="item-name">제주 감귤 (노지귤)</div><div class="item-desc">귤 시즌 본격 시작, 겨울 내내 꾸준히 판매</div></div></div>
+        <div class="item-row"><span class="badge badge-high">⬆ 높음</span><div><div class="item-name">사과 (부사)</div><div class="item-desc">부사 사과 최성수기 지속</div></div></div>
+        <div class="item-row"><span class="badge badge-high">⬆ 높음</span><div><div class="item-name">마늘 · 생강</div><div class="item-desc">김장용 양념 수요 폭증</div></div></div>
+        <div class="tip-box"><strong>💡 핵심전략:</strong> 김장 재료는 세트 구성 (배추+무+파+마늘) 으로 묶어 팔면 객단가 상승</div>
+      </div>
+    </div>
+
+    <!-- 12월 -->
+    <div class="card">
+      <div class="card-header m12">
+        <div class="month-badge">12월</div>
+        <div><h2>귤 전성기 · 연말 선물</h2><div class="subtitle">겨울 감귤류 최고조</div></div>
+      </div>
+      <div class="card-body">
+        <div class="item-row"><span class="badge badge-fire">🔥 폭발적</span><div><div class="item-name">제주 감귤 (노지귤)</div><div class="item-desc">12월이 귤 판매 연중 최고 피크, 5kg·10kg 박스 폭발</div></div></div>
+        <div class="item-row"><span class="badge badge-gift">🎁 선물</span><div><div class="item-name">연말 과일 선물세트</div><div class="item-desc">크리스마스·연말 선물 수요, 사과·배·감귤 세트</div></div></div>
+        <div class="item-row"><span class="badge badge-high">⬆ 높음</span><div><div class="item-name">곶감 · 견과류</div><div class="item-desc">겨울 간식, 연말 선물로 인기</div></div></div>
+        <div class="item-row"><span class="badge badge-high">⬆ 높음</span><div><div class="item-name">한라봉 (초기 출하)</div><div class="item-desc">12월 말 첫 출하, 프리미엄 가격 형성</div></div></div>
+        <div class="tip-box"><strong>💡 핵심전략:</strong> 귤은 "제주 직송 당일 수확" 강조. 크리스마스 선물 기획전으로 12월 중순에 판매 집중</div>
+      </div>
+    </div>
+
+  </div><!-- /grid -->
+
+  <!-- 연간 요약 -->
+  <div style="background:white; border-radius:16px; padding:28px; margin-top:28px; box-shadow:0 2px 12px rgba(0,0,0,0.09);">
+    <h2 style="color:#2e7d32; margin-bottom:16px;">📊 연간 핵심 판매 포인트 요약</h2>
+    <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:14px;">
+      <div style="background:#ffebee; border-radius:10px; padding:14px;">
+        <div style="font-weight:700; color:#c62828; margin-bottom:6px;">🔥 연중 최대 대목</div>
+        <div style="font-size:0.85rem;">추석 전 3주 (9월)<br>설 전 2주 (1~2월)<br>어버이날 전후 (5월)</div>
+      </div>
+      <div style="background:#fff3e0; border-radius:10px; padding:14px;">
+        <div style="font-weight:700; color:#e65100; margin-bottom:6px;">🏆 온라인 판매 TOP 품목</div>
+        <div style="font-size:0.85rem;">딸기, 샤인머스캣<br>복숭아, 사과·배 세트<br>제주 감귤</div>
+      </div>
+      <div style="background:#e8f5e9; border-radius:10px; padding:14px;">
+        <div style="font-weight:700; color:#2e7d32; margin-bottom:6px;">💰 고객단가 높은 품목</div>
+        <div style="font-size:0.85rem;">샤인머스캣 선물세트<br>한라봉·천혜향 세트<br>김장 재료 묶음</div>
+      </div>
+      <div style="background:#e3f2fd; border-radius:10px; padding:14px;">
+        <div style="font-weight:700; color:#1565c0; margin-bottom:6px;">⚡ 시즌 짧아 희소성 높은 것</div>
+        <div style="font-size:0.85rem;">두릅 (4월, 2~3주)<br>매실 (6월 초, 3주)<br>복숭아 (7~8월)</div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<footer>
+  © 2026 과일·농산물 온라인 판매 전략 가이드
+</footer>
+
+</body>
+</html>

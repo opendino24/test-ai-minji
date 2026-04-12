@@ -1,0 +1,4 @@
+node_modules/
+alwayz-collector/수집결과/*.png
+alwayz-collector/config.js
+*.env
