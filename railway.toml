@@ -1,0 +1,6 @@
+[build]
+builder = "nixpacks"
+buildCommand = "npm install --prefix family-calendar"
+
+[deploy]
+startCommand = "node family-calendar/server.js"
